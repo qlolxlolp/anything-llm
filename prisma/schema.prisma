@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?  @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// AutoPilot Models
+model AutoPilotConfig {
+  id                String   @id @default(cuid())
+  isActive          Boolean  @default(false)
+  autoScan          Boolean  @default(true)
+  autoOCR           Boolean  @default(true)
+  autoOrganize      Boolean  @default(false)
+  autoBackup        Boolean  @default(true)
+  scanInterval      Int      @default(300) // seconds
+  ocrTimeout        Int      @default(30)  // seconds
+  backupInterval    Int      @default(86400) // seconds (daily)
+  maxConcurrentJobs Int      @default(3)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  jobs              AutoPilotJob[]
+  activities        AutoPilotActivity[]
+}
+
+model AutoPilotJob {
+  id          String            @id @default(cuid())
+  configId    String
+  type        String            // SCAN, OCR, ORGANIZE, BACKUP, CLEANUP, MAINTENANCE
+  status      String            // PENDING, RUNNING, COMPLETED, FAILED, CANCELLED
+  priority    Int               @default(5)
+  inputData   String?           // JSON data
+  outputData  String?           // JSON result
+  errorMessage String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  config      AutoPilotConfig   @relation(fields: [configId], references: [id], onDelete: Cascade)
+  activities  AutoPilotActivity[]
+
+  @@index([status, priority, createdAt])
+}
+
+model AutoPilotActivity {
+  id          String              @id @default(cuid())
+  configId    String
+  jobId       String?
+  type        String              // SYSTEM, SCAN, OCR, ORGANIZE, BACKUP, ERROR, WARNING, INFO
+  action      String
+  description String
+  metadata    String?             // JSON metadata
+  status      String              // SUCCESS, WARNING, ERROR, INFO
+  duration    Int?                // milliseconds
+  createdAt   DateTime            @default(now())
+
+  config      AutoPilotConfig     @relation(fields: [configId], references: [id], onDelete: Cascade)
+  job         AutoPilotJob?       @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([configId, createdAt])
+  @@index([type, status, createdAt])
+}
+
+model AutoPilotMetrics {
+  id                String   @id @default(cuid())
+  date              DateTime @unique
+  totalJobs         Int      @default(0)
+  completedJobs     Int      @default(0)
+  failedJobs        Int      @default(0)
+  avgProcessingTime Float    @default(0)
+  totalDocuments    Int      @default(0)
+  ocrAccuracy       Float    @default(0)
+  systemUptime      Float    @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([date])
+}
