@@ -1,11 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Toaster } from "@/components/ui/toaster"
+import { Inter, Inter as V0_Font_Inter, Source_Code_Pro as V0_Font_Source_Code_Pro } from 'next/font/google'
+
+// Initialize fonts
+const _inter = V0_Font_Inter({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+const _sourceCodePro = V0_Font_Source_Code_Pro({ subsets: ['latin'], weight: ["200","300","400","500","600","700","800","900"] })
 
 const inter = Inter({ 
   subsets: ["latin"],
