@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
-
 /* Premium Dark Theme - Vercel/Linear inspired */
 :root {
   /* Deep dark background palette */
