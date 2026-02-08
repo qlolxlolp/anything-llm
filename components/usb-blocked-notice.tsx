@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { ShieldAlert, Monitor, Usb, ExternalLink, RefreshCw, Info } from "lucide-react"
+import { ShieldAlert, ExternalLink, RefreshCw, Monitor, Usb } from 'lucide-react'
 
 interface UsbBlockedNoticeProps {
   status: "unavailable" | "blocked"
@@ -11,7 +11,7 @@ export function UsbBlockedNotice({ status }: UsbBlockedNoticeProps) {
   
   return (
     <div className="flex h-screen w-full bg-background text-foreground items-center justify-center p-6">
-      <div className="max-w-xl w-full">
+      <div className="max-w-xl w-full rounded-full">
         {/* Main Card */}
         <div data-glass-card className="p-8 text-center">
           {/* Icon */}
@@ -20,7 +20,7 @@ export function UsbBlockedNotice({ status }: UsbBlockedNoticeProps) {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-bold text-foreground mb-3">
+          <h1 className="text-2xl font-bold text-foreground mb-3 bg-background">
             {isBlocked ? "دسترسی به سخت‌افزار مسدود شده" : "WebUSB پشتیبانی نمی‌شود"}
           </h1>
 
@@ -35,7 +35,7 @@ export function UsbBlockedNotice({ status }: UsbBlockedNoticeProps) {
           {/* Technical Info */}
           <div className="bg-muted/30 rounded-lg p-4 mb-6 text-right">
             <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+              <Usb className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
               <div className="text-sm text-muted-foreground">
                 <p className="font-medium text-foreground mb-1">اطلاعات فنی:</p>
                 {isBlocked ? (
@@ -64,7 +64,7 @@ export function UsbBlockedNotice({ status }: UsbBlockedNoticeProps) {
                 rel="noopener noreferrer"
                 data-premium-button
                 data-variant="primary"
-                className="justify-center"
+                className="justify-center text-card"
               >
                 <ExternalLink className="w-4 h-4" />
                 <span>باز کردن در پنجره جدید</span>

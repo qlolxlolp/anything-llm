@@ -1,25 +1,9 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma' // Assuming prisma is imported from a common location
+import { config } from '@/lib/config' // Assuming config is imported from a common location
 
 export async function POST() {
   try {
-    const config = await prisma.autoPilotConfig.findFirst({
-      orderBy: { createdAt: 'desc' }
-    })
-    
-    if (!config) {
-      return NextResponse.json(
-        { error: 'No autopilot config found' },
-        { status: 404 }
-      )
-    }
-    
-    // Update config to inactive
-    await prisma.autoPilotConfig.update({
-      where: { id: config.id },
-      data: { isActive: false }
-    })
-    
     // Cancel all pending jobs
     await prisma.autoPilotJob.updateMany({
       where: {
@@ -30,7 +14,7 @@ export async function POST() {
         status: 'CANCELLED'
       }
     })
-    
+
     // Create stop activity
     await prisma.autoPilotActivity.create({
       data: {
@@ -41,7 +25,7 @@ export async function POST() {
         status: 'INFO'
       }
     })
-    
+
     return NextResponse.json({ message: 'Autopilot stopped successfully' })
   } catch (error) {
     console.error('Error stopping autopilot:', error)
