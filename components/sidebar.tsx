@@ -1,6 +1,8 @@
-"use client"
+'use client'
+
 import { useEffect } from "react"
-import type { Device } from "@/lib/types"
+
+import type { Device } from '@/lib/types'
 import { Printer, ScanLine, Usb, Wifi, Bluetooth, Plus, Monitor, HardDrive, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 

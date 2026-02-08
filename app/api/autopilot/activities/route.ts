@@ -1,40 +1,16 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url)
-    const limit = parseInt(searchParams.get('limit') || '50')
-    const type = searchParams.get('type')
-    
-    const config = await prisma.autoPilotConfig.findFirst({
-      orderBy: { createdAt: 'desc' }
+    return NextResponse.json({
+      activities: [],
+      total: 0,
     })
-    
-    const activities = await prisma.autoPilotActivity.findMany({
-      where: {
-        configId: config?.id || 'default',
-        ...(type && { type: type as any })
-      },
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-      include: {
-        job: {
-          select: {
-            id: true,
-            type: true,
-            status: true
-          }
-        }
-      }
-    })
-    
-    return NextResponse.json(activities)
   } catch (error) {
-    console.error('Error fetching activities:', error)
+    console.error('Activities error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch activities' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

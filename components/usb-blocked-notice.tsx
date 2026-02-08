@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { ShieldAlert, Monitor, Usb, ExternalLink, RefreshCw, Info } from "lucide-react"
+import { ShieldAlert, ExternalLink, RefreshCw, Monitor, Usb } from 'lucide-react'
 
 interface UsbBlockedNoticeProps {
   status: "unavailable" | "blocked"
@@ -35,7 +35,7 @@ export function UsbBlockedNotice({ status }: UsbBlockedNoticeProps) {
           {/* Technical Info */}
           <div className="bg-muted/30 rounded-lg p-4 mb-6 text-right">
             <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+              <Usb className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
               <div className="text-sm text-muted-foreground">
                 <p className="font-medium text-foreground mb-1">اطلاعات فنی:</p>
                 {isBlocked ? (

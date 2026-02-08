@@ -6,15 +6,17 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Toaster } from "@/components/ui/toaster"
-import { Inter, Inter as V0_Font_Inter, Source_Code_Pro as V0_Font_Source_Code_Pro } from 'next/font/google'
+import { Inter, Source_Code_Pro } from 'next/font/google'
 
 // Initialize fonts
-const _inter = V0_Font_Inter({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
-const _sourceCodePro = V0_Font_Source_Code_Pro({ subsets: ['latin'], weight: ["200","300","400","500","600","700","800","900"] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: "--font-sans",
+const sourceCodePro = Source_Code_Pro({
+  subsets: ['latin'],
+  variable: '--font-mono',
 })
 
 export const metadata: Metadata = {
@@ -69,7 +71,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CanScan" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${sourceCodePro.variable} font-sans antialiased`} suppressHydrationWarning>
         <ErrorBoundary>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
             {children}

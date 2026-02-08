@@ -1,44 +1,28 @@
-import { NextResponse } from "next/server"
-import { createWorker } from "tesseract.js"
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const formData = await req.formData()
-    const file = formData.get("image") as File
-    
-    if (!file) {
-      return NextResponse.json({ error: "No image file provided" }, { status: 400 })
+    const { image } = await request.json()
+
+    if (!image) {
+      return NextResponse.json(
+        { error: 'No image provided' },
+        { status: 400 },
+      )
     }
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Initialize Tesseract worker
-    const worker = await createWorker("fas+eng", 1, {
-      logger: m => console.log(m)
+    // TODO: Implement Tesseract OCR
+    return NextResponse.json({
+      text: '',
+      confidence: 0,
+      words: 0,
+      lines: 0,
     })
-
-    try {
-      // Perform OCR
-      const { data } = await worker.recognize(buffer)
-      
-      return NextResponse.json({
-        text: data.text,
-        confidence: data.confidence,
-        words: data.words?.length || 0,
-        lines: data.lines?.length || 0,
-        paragraphs: data.paragraphs?.length || 0,
-        blocks: data.blocks?.length || 0
-      })
-    } finally {
-      await worker.terminate()
-    }
-  } catch (error: any) {
-    console.error("OCR Error:", error)
+  } catch (error) {
+    console.error('OCR Error:', error)
     return NextResponse.json(
-      { error: "OCR processing failed", details: error.message },
-      { status: 500 }
+      { error: 'OCR processing failed' },
+      { status: 500 },
     )
   }
 }
